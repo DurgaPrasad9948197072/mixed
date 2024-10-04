@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import List,Optional
 from datetime import datetime, date
 
 class RegisterHouseRequest(BaseModel):
@@ -29,3 +29,25 @@ class CreatePriceRequest(BaseModel):
     status: Optional[int] = 0
     description: Optional[str] = None
     key: Optional[str] = None
+
+class FeatureRequest(BaseModel):
+    name: str
+    status: Optional[int] = 0
+
+class TechnicalRequest(BaseModel):
+    name: str
+    status: Optional[int] = 0
+
+class CompatibilityRequest(BaseModel):
+    name: str
+    status: Optional[int] = 0
+
+class ProductHouseRequest(BaseModel):
+    name: Optional[str] = None
+    category: Optional[str] = None
+    image: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[CreatePriceRequest] = None
+    features: Optional[List[FeatureRequest]] = []
+    technical: Optional[List[TechnicalRequest]] = []
+    compatibility: Optional[List[CompatibilityRequest]] = []
