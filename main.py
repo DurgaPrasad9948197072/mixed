@@ -19,7 +19,7 @@ origins = [
 # Add middleware to allow cross-origin requests from the specified origins.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allows specified origins to make requests.
+    allow_origins=["*"],  # Allows specified origins to make requests.
     allow_credentials=True,  # Allows credentials to be submitted with a cross-origin request.
     allow_methods=["*"],  # Allows all HTTP methods.
     allow_headers=["*"],  # Allows all headers.

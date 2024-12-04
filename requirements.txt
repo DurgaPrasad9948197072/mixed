@@ -5,3 +5,7 @@ pymysql
 pydantic[email]
 email-validator
 cryptography
+jinja2
+aiosmtplib
+requests
+python-multipart>=0.0.5
