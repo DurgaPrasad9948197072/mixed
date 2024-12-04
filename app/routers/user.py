@@ -427,9 +427,9 @@ async def get_product_details(product_id: int, db: Session = Depends(get_db)):
 async def get_product_list(db: Session = Depends(get_db)):
     # Query products that are active (status = 1) and not subscribed (poid not in subscriptions)
     products = db.query(HouseProducts).filter(
-        HouseProducts.status == 1,
+        HouseProducts.status = 1,
         ~HouseProducts.poid.in_(
-            db.query(Subscription.poid).filter(Subscription.status == "active")
+            db.query(Subscription.poid).filter(Subscription.status = "active")
         )
     ).all()
 
@@ -446,7 +446,7 @@ async def get_product_list(db: Session = Depends(get_db)):
         offer = db.query(HouseOffers).filter_by(poid=product.poid).first()
         
         # Fetch the first plan associated with the product's planscheme_id
-        plan = db.query(PlanModel).filter(PlanModel.planscheme_id == product.planscheme_id).first()
+        plan = db.query(PlanModel).filter(PlanModel.planscheme_id = product.planscheme_id).first()
         plan_name = plan.name if plan else "N/A"
         base_price = plan.base_price if plan else "N/A"
 
@@ -501,7 +501,7 @@ async def get_product_list(db: Session = Depends(get_db)):
     # Query products that are active (status = 0) and not subscribed (poid not in subscriptions)
     products = db.query(HouseProducts).filter(
         ~HouseProducts.poid.in_(
-            db.query(Subscription.poid).filter(Subscription.status == "active")
+            db.query(Subscription.poid).filter(Subscription.status = "active")
         )
     ).all()
 
@@ -565,15 +565,15 @@ async def update_house_settings(
     request: UpdateHouseSettingsRequest,
     db: Session = Depends(get_db),
 ):
-    user = db.query(Houseuser).filter(Houseuser.id == user_id).first()
+    user = db.query(Houseuser).filter(Houseuser.id = user_id).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
     setting = (
         db.query(HouseUserSettings)
         .filter(
-            HouseUserSettings.id == request.uid,
-            HouseUserSettings.field == request.field,
+            HouseUserSettings.id = request.uid,
+            HouseUserSettings.field = request.field,
         )
         .first()
     )
@@ -665,9 +665,9 @@ async def send_email(email: str, otp: str):
 async def search_product(request: SearchQuery, db: Session = Depends(get_db)):
     # Start the query with active products
     query = db.query(HouseProducts).filter(
-        HouseProducts.status == 0,
+        HouseProducts.status = 0,
         ~HouseProducts.poid.in_(
-            db.query(Subscription.poid).filter(Subscription.status == "active")
+            db.query(Subscription.poid).filter(Subscription.status = "active")
         )  # Exclude subscribed products
     )
 
