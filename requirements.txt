@@ -9,3 +9,6 @@ jinja2
 aiosmtplib
 requests
 python-multipart>=0.0.5
+python-dotenv
+itsdangerous
+passlib

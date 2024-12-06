@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, Form, File, UploadFile, Body, HTTPException
+from fastapi import APIRouter, Depends, Form, File, UploadFile, Body, BackgroundTasks, HTTPException
 from typing import List,Union
 from sqlalchemy.orm import Session
 from app import models, schemas
 from database import get_db
-from app.schemas.user import RegisterHouseRequest,LoginHouseRequest,UpdateHouseUserRequest,HouseOrderRequest,CreatePriceRequest,ProductHouseRequest,UpdateHouseSettingsRequest,OTPRequest,OTPVerify,SearchQuery,CreateSubscriptionRequest,UpdateProductHouseRequest,ImageDeletionResponse ,OfferCreate, OfferUpdate, OfferResponse, ReviewRequest, EmailRequest,Feature,Plan,FeaturesRequest,CustomizationRequestPayload,CustomizationGroup,CustomizationRequestResponse,UserDetails,ProductDetails,UpdateCustomizationStatusRequest
+from app.schemas.user import RegisterHouseRequest,LoginHouseRequest,UpdateHouseUserRequest,HouseOrderRequest,CreatePriceRequest,ProductHouseRequest,UpdateHouseSettingsRequest,OTPRequest,OTPVerify,SearchQuery,CreateSubscriptionRequest,UpdateProductHouseRequest,ImageDeletionResponse ,OfferCreate, OfferUpdate, OfferResponse, ReviewRequest, EmailRequest,Feature,Plan,FeaturesRequest,CustomizationRequestPayload,CustomizationGroup,CustomizationRequestResponse,UserDetails,ProductDetails,UpdateCustomizationStatusRequest,PasswordResetRequest,PasswordResetForm
 from app.models.user import Houseuser,HouseOrders,Price,HouseProducts,HouseProductsFeature,HouseProductsTechnical,HouseProductsCompatibility,HouseUserSettings,OTPVerification,Subscription,HouseImages,HouseOffers,PlanModel,FeatureModel,HouseDeviceImages,HouseProductCustomelements,CustomizationRequest
 from datetime import datetime, timedelta
 from aiosmtplib import SMTP
@@ -11,7 +11,8 @@ from email.message import EmailMessage
 import random
 from datetime import datetime, timedelta
 from app.utlity.outer_api import upload_image_to_imgbb
-from app.utlity.mailer import send_email_support
+from app.utlity.mailer import send_email_support,get_email_template,send_email_dynamic
+from app.utlity.tokenizer import generate_reset_token,verify_reset_token
 from io import BytesIO
 import json
 
@@ -595,24 +596,12 @@ async def update_house_settings(
         "message": "House settings updated successfully",
     }
 
-# async def send_email(email: str, otp: str):
-#     message = EmailMessage()
-#     message["From"] = "testgo@gmail.com"
-#     message["To"] = email
-#     message["Subject"] = "Your OTP Code"
-#     message.set_content(f"Your OTP code is {otp}. It expires in 10 minutes.")
-    
-#     async with SMTP("smtp.gmail.com", port=587) as smtp:
-#         await smtp.starttls()
-#         await smtp.login("your-email@example.com", "your-password")
-#         await smtp.send_message(message)
-
-
 @user.post("/generate-otp")
-async def generate_otp_endpoint(request: OTPRequest, db: Session = Depends(get_db)):
+async def generate_otp_endpoint(request: OTPRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     otp = random.randint(100000, 999999)
     expires_at = datetime.utcnow() + timedelta(minutes=10)
-
+    expiration_time = expires_at.strftime("%m/%d/%Y %H:%M:%S")
+    user = db.query(Houseuser).filter(Houseuser.id == request.id).first()
     otp_entry = db.query(OTPVerification).filter_by(id=request.id).first()
     if otp_entry:
         otp_entry.otp = otp
@@ -622,7 +611,16 @@ async def generate_otp_endpoint(request: OTPRequest, db: Session = Depends(get_d
         db.add(otp_entry)
 
     db.commit()
-    # await send_email(request.email, otp)
+
+    email_subject, email_body = get_email_template(
+        "verify_otp", 
+        user.username,
+        otp,
+        expiration_time
+    )
+
+    background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
+
     return {
         "result": "success",
         "message": "OTP sent successfully",
@@ -646,19 +644,6 @@ def verify_otp_endpoint(request: OTPVerify, db: Session = Depends(get_db)):
         "result": "success",
         "message": "OTP verified successfully",
     }
-
-
-async def send_email(email: str, otp: str):
-    message = EmailMessage()
-    message["From"] = "your-email@example.com"
-    message["To"] = email
-    message["Subject"] = "Your OTP Code"
-    message.set_content(f"Your OTP code is {otp}. It expires in 10 minutes.")
-    
-    async with SMTP("smtp.gmail.com", port=587) as smtp:
-        await smtp.starttls()
-        await smtp.login("your-email@example.com", "your-password")
-        await smtp.send_message(message)
 
 
 @user.post("/search_product")
@@ -715,6 +700,7 @@ async def search_product(request: SearchQuery, db: Session = Depends(get_db)):
 @user.post("/create_subscription/")
 async def create_subscription(
     request: CreateSubscriptionRequest,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
     if request.billing_cycle not in ["monthly", "quarterly", "annually"]:
@@ -739,7 +725,22 @@ async def create_subscription(
     db.add(subscription)
     db.commit()
     db.refresh(subscription)
+    
+    user = db.query(Houseuser).filter(Houseuser.id == request.user_id).first()
+    product = db.query(HouseProducts).filter(HouseProducts.poid == request.product_id).first()
 
+    email_subject, email_body = get_email_template(
+        "subscription_confirmation", 
+        product.name,
+        user.username, 
+        request.plan_name, 
+        request.amount, 
+        user.password
+    )
+    # send_email_dynamic(user.email,email_subject,email_body)
+    background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
+
+    
     return {
         "result": "success",
         "message": "Subscription created successfully",
@@ -807,7 +808,11 @@ async def get_active_subscriptions(user_id: int, db: Session = Depends(get_db)):
     }
 
 @user.put("/cancel_subscription/{subscription_id}/")
-async def cancel_subscription(subscription_id: int, db: Session = Depends(get_db)):
+async def cancel_subscription(
+    subscription_id: int,
+    background_tasks: BackgroundTasks, 
+    db: Session = Depends(get_db)
+    ):
     # Fetch the subscription by id
     subscription = db.query(Subscription).filter_by(suid=subscription_id).first()
 
@@ -828,6 +833,21 @@ async def cancel_subscription(subscription_id: int, db: Session = Depends(get_db
 
     db.commit()  # Commit the transaction to the database
     db.refresh(subscription)  # Refresh the subscription to reflect the updated status
+
+    user = db.query(Houseuser).filter(Houseuser.id == subscription.id).first()
+    product = db.query(HouseProducts).filter(HouseProducts.poid == subscription.poid).first()
+    cancellation_date = datetime.now().strftime("%Y-%m-%d")
+
+    email_subject, email_body = get_email_template(
+        "subscription_canceled",
+        product.name,
+        user.username,
+        subscription.plan_name,
+        cancellation_date
+    )
+
+    
+    background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
 
     return {"result": "success", "message": "Subscription has been successfully canceled."}
 
@@ -894,12 +914,28 @@ async def get_products_with_offers(db: Session = Depends(get_db)):
         price = db.query(Price).filter_by(poid=product.poid).first()
         offer = db.query(HouseOffers).filter_by(poid = product.poid).first()
 
+        # Fetch the first plan associated with the product's planscheme_id
+        plan = db.query(PlanModel).filter(PlanModel.planscheme_id == product.planscheme_id).first()
+        plan_name = plan.name if plan else "N/A"
+        base_price = plan.base_price if plan else "N/A"
+
+        # Calculate the total feature price for the same planscheme_id
+        feature_prices = db.query(FeatureModel).filter(
+            FeatureModel.plan_id == product.planscheme_id
+        ).all()
+        total_feature_price = sum(f.price for f in feature_prices) if feature_prices else 0
+
+        # Replace the price with the sum of the base price and total feature price
+        combined_price = base_price + total_feature_price if base_price != "N/A" else "N/A"
+        if combined_price == "N/A":
+            return None
+
         result.append({
             "id": product.poid,
             "name": product.name,
             "image": product.image,
             "category": product.category,
-            "price": price.amount if price else "N/A",
+            "price": combined_price,
             "offer": {
                 "id": offer.oid,
                 "discountPercentage": offer.discountpercentage,
@@ -995,6 +1031,22 @@ async def get_product_list(db: Session = Depends(get_db)):
         images = db.query(HouseImages).filter_by(poid=product.poid).all()
         custom_elements = db.query(HouseProductCustomelements).filter_by(poid=product.poid).all()
 
+        # Fetch the first plan associated with the product's planscheme_id
+        plan = db.query(PlanModel).filter(PlanModel.planscheme_id == product.planscheme_id).first()
+        plan_name = plan.name if plan else "N/A"
+        base_price = plan.base_price if plan else "N/A"
+
+        # Calculate the total feature price for the same planscheme_id
+        feature_prices = db.query(FeatureModel).filter(
+            FeatureModel.plan_id == product.planscheme_id
+        ).all()
+        total_feature_price = sum(f.price for f in feature_prices) if feature_prices else 0
+
+        # Replace the price with the sum of the base price and total feature price
+        combined_price = base_price + total_feature_price if base_price != "N/A" else "N/A"
+        if combined_price == "N/A":
+            return None
+
         product_data = {
             "id": product.poid,
             "name": product.name,
@@ -1005,7 +1057,7 @@ async def get_product_list(db: Session = Depends(get_db)):
             "description": product.description,
             "datetime": product.datetime,
             "status": product.status,
-            "price": price.amount if price else "N/A",  # Handle case when price is not found
+            "price": combined_price,  # Handle case when price is not found
             "originalPrice": 22.00,  # Replace with actual price logic if needed
             "rating": 5,  # Replace with actual rating logic if needed
             "sales": 396,  # Replace with actual sales logic if needed
@@ -1025,7 +1077,7 @@ async def get_product_list(db: Session = Depends(get_db)):
     }
 
 @user.post("/review-product/{product_id}")
-async def review_product(product_id: int, review: ReviewRequest, db: Session = Depends(get_db)):
+async def review_product(product_id: int, review: ReviewRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     """
     Approve or reject a product based on the review.
     """
@@ -1048,11 +1100,64 @@ async def review_product(product_id: int, review: ReviewRequest, db: Session = D
         product.review_notes = review.notes  # Assuming `review_notes` exists in the model
 
     db.commit()  # Save changes to the database
+
+    offer = db.query(HouseOffers).filter_by(poid=product.poid).first()
+
+    # If no offer exists, skip email sending
+    if not offer:
+        return {
+            "result": "success",
+            "message": f"Product {product_id} has been {'approved' if review.status == 1 else 'rejected'}. No offer found, email not sent."
+        }
+
+    # Fetch the first plan associated with the product's planscheme_id
+    plan = db.query(PlanModel).filter(PlanModel.planscheme_id == product.planscheme_id).first()
+    base_price = plan.base_price if plan else 0  # If plan is found, get base price
+
+    # Calculate the total feature price for the same planscheme_id
+    feature_prices = db.query(FeatureModel).filter(
+        FeatureModel.plan_id == product.planscheme_id
+    ).all()
+    total_feature_price = sum(f.price for f in feature_prices) if feature_prices else 0
+
+    # Calculate combined price
+    combined_price = base_price + total_feature_price
+
+    # Calculate discount price
+    discount_price = combined_price * (1 - float(offer.discountpercentage) / 100)
+
+    # Get the offer details
+    discount_percentage = offer.discountpercentage
+    # Convert startdate and enddate from string to datetime
+    start_date = datetime.strptime(offer.startdate, "%Y-%m-%d")  # Adjust format as needed
+    end_date = datetime.strptime(offer.enddate, "%Y-%m-%d")  # Adjust format as needed
+
+    # Format the dates
+    formatted_start_date = start_date.strftime("%B %d, %Y")  # Example format
+    formatted_end_date = end_date.strftime("%B %d, %Y")  # Example format
+    shop_now_link = "http://localhost:3000/template/" + str(product.poid)    # Prepare email body and subject
+    email_subject, email_body = get_email_template(
+        "product_offer_email", 
+        product.name,
+        offer.discountpercentage,
+        combined_price,
+        discount_price,
+        end_date,
+        shop_now_link
+    )
+
+    # Send email in the background (ensure you have implemented `send_email_dynamic` correctly)
+    background_tasks.add_task(send_email_dynamic, "kanuri.durgaprasad1997@gmail.com", email_subject, email_body)
+
+    # Send email to each user
+    # users = db.query(Houseuser).all()
+    # for user in users:
+    #     background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
+
     return {
         "result": "success",
-        "message": f"Product {product_id} has been {'approved' if review.status == 1 else 'rejected'}.",
+        "message": f"Product {product_id} has been {'approved' if review.status == 1 else 'rejected'} and offer details sent.",
     }
-
 
 
 @user.post("/send-email/")
@@ -1063,6 +1168,7 @@ async def send_email_endpoint(email_request: EmailRequest):
     try:
         # Call the send_email function
         send_email_support(
+            email_request.from_email,
             email_request.to_email,
             email_request.subject,
             email_request.body
@@ -1462,7 +1568,12 @@ async def get_product_details(product_id: int, db: Session = Depends(get_db)):
 
 
 @user.post("/submit_customization_requests/{template_id}")
-async def submit_customization_requests(template_id: int,payload: CustomizationRequestPayload, db: Session = Depends(get_db)):
+async def submit_customization_requests(
+    template_id: int,
+    payload: CustomizationRequestPayload,
+    background_tasks: BackgroundTasks, 
+    db: Session = Depends(get_db)
+    ):
     try:
         # Ensure that each customization group (Header, Product Card, etc.) is processed correctly
         for group_name, descriptions in payload.customizationRequests.items():
@@ -1481,6 +1592,16 @@ async def submit_customization_requests(template_id: int,payload: CustomizationR
                 db.add(new_request)  # Add the request to the session
 
         db.commit()  # Save all requests to the database
+
+        user = db.query(Houseuser).filter(Houseuser.id == payload.id).first()
+
+        email_subject, email_body = get_email_template(
+            "support_request_acknowledgment", 
+            user.username
+        )
+        # send_email_dynamic(user.email,email_subject,email_body)
+        background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
+
         return {"result": "success", "message": "Customization requests submitted successfully"}
 
     except ValueError as ve:
@@ -1748,3 +1869,50 @@ def get_subscription_list(db: Session = Depends(get_db)):
         return response_data
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
+
+@user.post("/request-password-reset/")
+async def request_password_reset(
+    request: PasswordResetRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+
+    # Find the user by email
+    user = db.query(Houseuser).filter(Houseuser.email == request.email).first()
+    if not user:
+        return {"result":"error","message": "User Not Found"}
+
+    # Generate the reset token
+    reset_token = generate_reset_token(user.email)
+    reset_link = f"http://localhost:3000/reset-password?token={reset_token}"
+
+
+    email_subject, email_body = get_email_template(
+        "reset_password_email", 
+        reset_link,
+        user.username
+    )
+
+    background_tasks.add_task(send_email_dynamic, user.email, email_subject, email_body)
+
+    return {"result":"success","message": "Password reset link has been sent to your email"}
+
+@user.post("/reset-password/")
+async def reset_password(
+    request: PasswordResetForm,
+    db: Session = Depends(get_db)
+):
+    # Verify the token
+    email = verify_reset_token(request.token)
+
+    # Find the user by email
+    user = db.query(Houseuser).filter(Houseuser.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Hash the new password
+    # hashed_password = pwd_context.hash(new_password)
+    user.password = request.new_password
+    db.commit()
+
+    return {"result":"success", "message": "Your password has been reset successfully"}

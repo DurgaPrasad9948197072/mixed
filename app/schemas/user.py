@@ -190,3 +190,13 @@ class CustomizationRequestResponse(BaseModel):
 class UpdateCustomizationStatusRequest(BaseModel):
     rid: int
     new_status: int
+
+
+# Request model
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+# Reset password form model
+class PasswordResetForm(BaseModel):
+    token: str
+    new_password: str
