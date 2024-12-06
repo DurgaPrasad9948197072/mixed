@@ -459,8 +459,9 @@ async def get_product_list(db: Session = Depends(get_db)):
 
         # Replace the price with the sum of the base price and total feature price
         combined_price = base_price + total_feature_price if base_price != "N/A" else "N/A"
-        if combined_price is "N/A":
+        if combined_price == "N/A":
             continue
+            
         product_data = {
             "id": product.poid,
             "name": product.name,
