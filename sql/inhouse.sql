@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Dec 04, 2024 at 10:47 AM
+-- Generation Time: Dec 06, 2024 at 06:51 PM
 -- Server version: 8.0.39
 -- PHP Version: 8.2.8
 
@@ -48,7 +48,11 @@ INSERT INTO `customizationrequest` (`rid`, `poid`, `id`, `name`, `customize`, `s
 (4, 33, 6, 'Header', 'ewfwsef', 1, '2024-12-02 05:20:08.302712'),
 (5, 33, 6, 'Product Card', 'fdwesfws', 1, '2024-12-02 05:20:08.444912'),
 (6, 33, 6, 'Checkout Process', 'edsefes', 0, '2024-12-02 05:20:08.447226'),
-(7, 10, 6, 'footer', 'jhbhjv', 1, '2024-12-02 16:08:55.315542');
+(7, 10, 6, 'footer', 'jhbhjv', 1, '2024-12-02 16:08:55.315542'),
+(8, 14, 6, 'Header', 'header request data  new chnages', 0, '2024-12-05 10:19:50.699596'),
+(9, 32, 6, 'Header', 'HEADER REQUESTED', 0, '2024-12-05 10:34:55.038609'),
+(10, 32, 6, 'Header', 'HEADER REQUESTED', 0, '2024-12-05 10:36:04.043569'),
+(11, 32, 6, 'Header', 'HEADER REQUESTED', 1, '2024-12-05 10:36:45.556881');
 
 -- --------------------------------------------------------
 
@@ -74,7 +78,8 @@ INSERT INTO `features` (`feid`, `name`, `price`, `plan_id`) VALUES
 (24, 'Admin Dashboard', 10, NULL),
 (25, 'Application Sources', 10, NULL),
 (26, 'Digital Marketing', 10, NULL),
-(27, 'SEO', 10, NULL);
+(27, 'SEO', 10, NULL),
+(28, 'new one', 10, NULL);
 
 -- --------------------------------------------------------
 
@@ -158,7 +163,10 @@ CREATE TABLE `houseoffers` (
 INSERT INTO `houseoffers` (`oid`, `poid`, `discountpercentage`, `startdate`, `enddate`, `datetime`, `status`) VALUES
 (5, 10, '7', '2024-11-27', '2024-11-27', '2024-11-27 19:15:30.507769', 0),
 (7, 11, '29', '2024-11-29', '2024-11-29', '2024-11-29 17:27:17.070823', 0),
-(8, 33, '20', '2024-12-01', '2024-12-06', '2024-12-01 08:47:21.801566', 0);
+(8, 33, '20', '2024-12-01', '2024-12-06', '2024-12-01 08:47:21.801566', 0),
+(9, 44, '25', '2024-12-05', '2025-02-05', '2024-12-05 13:49:43.051903', 0),
+(10, 43, '35', '2024-12-05', '2025-02-05', '2024-12-05 13:50:20.541713', 0),
+(11, 42, '40', '2024-12-05', '2025-02-04', '2024-12-05 13:59:31.670755', 0);
 
 -- --------------------------------------------------------
 
@@ -230,9 +238,10 @@ CREATE TABLE `houseproductcustomelements` (
 INSERT INTO `houseproductcustomelements` (`cpid`, `poid`, `name`, `description`) VALUES
 (3, 35, 'header', 'dkjubnhj'),
 (4, 35, 'conent', 'jybhj'),
-(8, 13, 'ngvh', 'jbhj'),
-(11, 10, 'footer', 'dkjnuk'),
-(16, 44, 'ygthvb', 'jyjbj');
+(17, 44, 'ygthvb', 'jyjbj'),
+(18, 45, 'ujhb', 'kuhnjbk'),
+(19, 10, 'footer', 'dkjnuk'),
+(20, 13, 'ngvh', 'jbhj');
 
 -- --------------------------------------------------------
 
@@ -328,19 +337,20 @@ INSERT INTO `houseproductfeature` (`fid`, `poid`, `name`, `status`, `datetime`) 
 (226, 33, 'delievry app', 1, '2024-12-01 08:46:29.466053'),
 (227, 33, 'tracking', 1, '2024-12-01 08:46:29.470549'),
 (240, 35, 'name', 1, '2024-12-01 16:32:01.883100'),
-(247, 13, 'Feature 1', 0, '2024-12-01 16:58:57.586179'),
-(248, 13, 'Feature 2', 0, '2024-12-01 16:58:57.587809'),
-(249, 13, 'Feature 1', 0, '2024-12-01 16:58:57.588668'),
-(250, 13, 'Feature 2', 0, '2024-12-01 16:58:57.589391'),
-(257, 10, 'name', 0, '2024-12-01 17:00:36.945207'),
-(258, 10, 'name', 0, '2024-12-01 17:00:36.946555'),
-(259, 10, 'name', 0, '2024-12-01 17:00:36.948145'),
-(260, 10, 'name', 0, '2024-12-01 17:00:36.949572'),
-(261, 10, 'name', 0, '2024-12-01 17:00:36.950663'),
-(262, 10, 'name', 0, '2024-12-01 17:00:36.952201'),
 (263, 11, 'Feature 1', 0, '2024-12-02 10:28:51.992204'),
 (264, 11, 'Feature 2', 0, '2024-12-02 10:28:52.014051'),
-(268, 44, 'dewdw', 0, '2024-12-02 18:31:02.392322');
+(269, 44, 'dewdw', 0, '2024-12-05 13:47:44.273067'),
+(270, 45, 'mughbyj', 1, '2024-12-05 16:52:35.314185'),
+(271, 10, 'name', 0, '2024-12-05 16:53:04.321369'),
+(272, 10, 'name', 0, '2024-12-05 16:53:04.324465'),
+(273, 10, 'name', 0, '2024-12-05 16:53:04.325476'),
+(274, 10, 'name', 0, '2024-12-05 16:53:04.326356'),
+(275, 10, 'name', 0, '2024-12-05 16:53:04.327190'),
+(276, 10, 'name', 0, '2024-12-05 16:53:04.328183'),
+(277, 13, 'Feature 1', 0, '2024-12-05 18:06:23.090671'),
+(278, 13, 'Feature 2', 0, '2024-12-05 18:06:23.092942'),
+(279, 13, 'Feature 1', 0, '2024-12-05 18:06:23.093484'),
+(280, 13, 'Feature 2', 0, '2024-12-05 18:06:23.093813');
 
 -- --------------------------------------------------------
 
@@ -390,15 +400,16 @@ INSERT INTO `houseproducts` (`poid`, `name`, `description`, `datetime`, `status`
 (33, 'Biryanis', 'kjubnjhbjhbv\njvbhhjbv \njhbj\njhbjvb hvhvgcvgcgcvg jsgbdhj   gbhjb', '2024-12-01 08:46:29.381894', 1, 'Food', 'https://i.ibb.co/jkyVZ2Y/DALL-E-2024-11-02-11-00-12-A-professional-and-inviting-image-for-a-technology-landing-page-with-the.jpg', 469259),
 (34, 'PIZZHUT', 'JHB J JBHYJhujknhj hbujKJU', '2024-12-01 16:31:36.957176', 0, 'Food', 'https://i.ibb.co/hgfdD1x/Hello-everyone-I-want-to-share-my-recent-exploration-of-the-online-Grocery-Shop-mobile-app-UI-design.jpg', 469259),
 (35, 'PIZZHUT', 'JHB J JBHYJhujknhj hbujKJU', '2024-12-01 16:32:01.848774', 0, 'Food', 'https://i.ibb.co/hgfdD1x/Hello-everyone-I-want-to-share-my-recent-exploration-of-the-online-Grocery-Shop-mobile-app-UI-design.jpg', 469259),
-(36, 'dcs', 'sdcsddcd', '2024-12-02 16:52:00.081730', 0, 'Food', 'https://i.ibb.co/609hHDC/Whats-App-Image-2024-11-24-at-5-46-35-AM.jpg', 469259),
+(36, 'dcs', 'sdcsddcd', '2024-12-02 16:52:00.081730', 2, 'Food', 'https://i.ibb.co/609hHDC/Whats-App-Image-2024-11-24-at-5-46-35-AM.jpg', 469259),
 (37, 'verggies', 'jhbghjb uygbyhuj uygu jyhb', '2024-12-02 18:14:01.782895', 0, 'Grocery', 'https://i.ibb.co/NrypzNx/DALL-E-2024-11-02-10-49-10-A-modern-professional-hero-image-for-a-technology-landing-page-titled-Tem.jpg', 469259),
 (38, 'jybh j', 'jhb gj', '2024-12-02 18:15:01.844787', 0, 'Fashion', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
 (39, 'jybh j', 'jhb gj', '2024-12-02 18:16:58.103665', 0, 'Fashion', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
 (40, 'jybh j', 'jhb gj', '2024-12-02 18:20:35.311173', 0, 'Fashion', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
 (41, 'jhgb hj', 'jbhnj jjbyjh ', '2024-12-02 18:23:09.989078', 0, 'Agency', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
-(42, 'jhgb hj', 'jbhnj jjbyjh ', '2024-12-02 18:23:37.668835', 0, 'Agency', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
-(43, 'jhgb hj', 'jbhnj jjbyjh ', '2024-12-02 18:24:42.616492', 0, 'Agency', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
-(44, 'ngv gh', 'jbhj', '2024-12-02 18:28:16.622850', 0, 'Agency', 'https://i.ibb.co/TYgDfHt/pablo-merchan-montes-dc-JMu8lb5-U-unsplash.jpg', 469259);
+(42, 'jhgb hj', 'jbhnj jjbyjh ', '2024-12-02 18:23:37.668835', 1, 'Agency', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
+(43, 'jhgb hj', 'jbhnj jjbyjh ', '2024-12-02 18:24:42.616492', 1, 'Agency', 'https://i.ibb.co/1mm1R8q/splash-animation.png', 469259),
+(44, 'ngv gh', 'jbhj', '2024-12-02 18:28:16.622850', 1, 'Agency', 'https://i.ibb.co/TYgDfHt/pablo-merchan-montes-dc-JMu8lb5-U-unsplash.jpg', 469259),
+(45, 'ugyvhuj', 'mjbhnkbj jbhyj ', '2024-12-05 16:52:35.137958', 0, 'Business', 'https://i.ibb.co/d5zJvj7/logo.png', 469259);
 
 -- --------------------------------------------------------
 
@@ -491,19 +502,18 @@ INSERT INTO `houseproducttechnical` (`tid`, `poid`, `name`, `datetime`, `status`
 (219, 33, 'admin dashboard', '2024-12-01 08:46:29.471834', 1),
 (220, 33, 'anayalic', '2024-12-01 08:46:29.478151', 1),
 (233, 35, 'name', '2024-12-01 16:32:01.886730', 1),
-(240, 13, 'Technical 1', '2024-12-01 16:58:57.591474', 0),
-(241, 13, 'Technical 1', '2024-12-01 16:58:57.594723', 0),
-(242, 13, 'Technical 1', '2024-12-01 16:58:57.596292', 0),
-(243, 13, 'Technical 1', '2024-12-01 16:58:57.597061', 0),
-(250, 10, 'name', '2024-12-01 17:00:36.953580', 0),
-(251, 10, 'name', '2024-12-01 17:00:36.954373', 0),
-(252, 10, 'name', '2024-12-01 17:00:36.955373', 0),
-(253, 10, 'name', '2024-12-01 17:00:36.956230', 0),
-(254, 10, 'name', '2024-12-01 17:00:36.956994', 0),
-(255, 10, 'name', '2024-12-01 17:00:36.957790', 0),
 (256, 11, 'Technical 1', '2024-12-02 10:28:52.023830', 0),
 (257, 11, 'Technical 1', '2024-12-02 10:28:52.025830', 0),
-(260, 44, 'yghg', '2024-12-02 18:31:02.394209', 0);
+(261, 44, 'yghg', '2024-12-05 13:47:44.275363', 0),
+(262, 10, 'name', '2024-12-05 16:53:04.332439', 0),
+(263, 10, 'name', '2024-12-05 16:53:04.334131', 0),
+(264, 10, 'name', '2024-12-05 16:53:04.334921', 0),
+(265, 10, 'name', '2024-12-05 16:53:04.335715', 0),
+(266, 10, 'name', '2024-12-05 16:53:04.336244', 0),
+(267, 10, 'name', '2024-12-05 16:53:04.336859', 0),
+(268, 13, 'Technical 1', '2024-12-05 18:06:23.094376', 0),
+(269, 13, 'Technical 1', '2024-12-05 18:06:23.094853', 0),
+(270, 13, 'Technical 1', '2024-12-05 18:06:23.095507', 0);
 
 -- --------------------------------------------------------
 
@@ -531,7 +541,7 @@ INSERT INTO `houseuser` (`id`, `email`, `password`, `date`, `date_time`, `status
 (3, 'user@example.com', '123', '2024-09-03', '2024-09-03 15:33:28.844614', 0, 'test'),
 (4, 'test1@gmail.com', '123', '2024-09-04', '2024-09-04 16:40:33.353261', 0, 'test'),
 (5, 'jhbdxj@gmail.com', '123', '2024-09-20', '2024-09-20 11:05:32.124357', 0, 'jshdj'),
-(6, 'durga@gamil.com', 'string', '2024-11-22', '2024-11-22 16:20:19.036530', 0, 'durga prasad'),
+(6, 'kanuri.durgaprasad1997@gmail.com', '123456789', '2024-11-22', '2024-11-22 16:20:19.036530', 0, 'durga prasad'),
 (7, 'hgvh@gmail.com', '12345678', '2024-11-22', '2024-11-22 16:51:47.226651', 0, 'jhbyjbhj'),
 (8, 'sdjhbvj@gmail.com', '12345678', '2024-11-22', '2024-11-22 17:26:13.220049', 0, 'testing new data');
 
@@ -579,7 +589,7 @@ CREATE TABLE `otp_verification` (
 --
 
 INSERT INTO `otp_verification` (`oid`, `email`, `otp`, `expires_at`, `id`) VALUES
-(1, 'user@example.com', '721712', '2024-12-02 16:25:28.689037', 6);
+(1, 'user@example.com', '573369', '2024-12-05 12:47:08.714803', 6);
 
 -- --------------------------------------------------------
 
@@ -601,7 +611,7 @@ CREATE TABLE `plans` (
 --
 
 INSERT INTO `plans` (`pid`, `name`, `base_price`, `description`, `planscheme_id`, `includedFeatures`) VALUES
-(30, 'Basic', 40, 'Get started with essential features', 469259, '23'),
+(30, 'Basic', 45, 'Get started with essential features', 469259, '23'),
 (31, 'Pro', 70, 'Advanced features for professionals', 469259, '21,22,23,24'),
 (32, 'Enterprise', 150, 'Full suite of features for large teams', 469259, '26,25,24,23,22,21');
 
@@ -683,7 +693,22 @@ CREATE TABLE `subscriptions` (
 INSERT INTO `subscriptions` (`suid`, `id`, `poid`, `plan_name`, `amount`, `payment_method`, `type_payment`, `status`, `billing_cycle`, `billing_date`, `expiration_date`, `current_price`, `selected_features`, `created_at`, `updated_at`) VALUES
 (25, 6, 10, 'Pro', 86.49, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-02 12:46:27.256000', '2025-01-02 12:46:27.286000', 86.49, '21,22,23,24,25,26,27', '2024-12-02 12:46:27.497904', '2024-12-02 15:51:18.473475'),
 (26, 6, 12, 'Enterprise', 148.8, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-02 12:47:43.432000', '2025-01-02 12:47:43.432000', 148.8, '21,22,23,24,25,26,27', '2024-12-02 12:47:43.455897', '2024-12-02 15:51:27.634017'),
-(27, 6, 10, 'Pro', 86.49, 'Credit Card', 'first_payment', 'active', 'monthly', '2024-12-02 18:34:51.746000', '2025-01-02 18:34:51.759000', 86.49, '21,22,23,24,25,26,27', '2024-12-02 18:34:51.916650', '2024-12-02 18:34:51.916650');
+(27, 6, 10, 'Pro', 86.49, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-02 18:34:51.746000', '2025-01-02 18:34:51.759000', 86.49, '21,22,23,24,25,26,27', '2024-12-02 18:34:51.916650', '2024-12-05 09:58:44.065862'),
+(28, 6, 12, 'Pro', 93, 'Credit Card', 'first_payment', 'active', 'monthly', '2024-12-05 08:12:27.554000', '2025-01-05 08:12:27.556000', 93, '21,22,23,24,25,26,27', '2024-12-05 08:12:27.683695', '2024-12-05 08:12:27.683695'),
+(29, 6, 19, 'Basic', 97.65, 'Credit Card', 'first_payment', 'active', 'monthly', '2024-12-05 08:48:50.293000', '2025-01-05 08:48:50.293000', 97.65, '21,22,23,24,25,26,27', '2024-12-05 08:48:50.347456', '2024-12-05 08:48:50.347456'),
+(30, 6, 19, 'Pro', 93, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 08:50:55.804000', '2025-01-05 08:50:55.804000', 93, '21,22,23,24,25,26,27', '2024-12-05 08:50:55.973232', '2024-12-05 10:43:32.127597'),
+(31, 6, 19, 'Pro', 93, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 08:54:35.443000', '2025-01-05 08:54:35.443000', 93, '21,22,23,24,25,26,27', '2024-12-05 08:54:35.582133', '2024-12-05 18:38:58.323565'),
+(32, 6, 19, 'Pro', 93, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 08:55:34.204000', '2025-01-05 08:55:34.204000', 93, '21,22,23,24,25,26,27', '2024-12-05 08:55:34.338234', '2024-12-05 10:43:26.771762'),
+(33, 6, 19, 'Pro', 93, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 08:56:01.852000', '2025-01-05 08:56:01.852000', 93, '21,22,23,24,25,26,27', '2024-12-05 08:56:01.986406', '2024-12-05 10:43:24.072310'),
+(34, 6, 17, 'Enterprise', 148.8, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 08:59:30.647000', '2025-01-05 08:59:30.647000', 148.8, '21,22,23,24,25,26,27', '2024-12-05 08:59:30.704137', '2024-12-05 10:43:19.562176'),
+(35, 6, 11, 'Pro', 66.03, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 09:02:58.279000', '2025-01-05 09:02:58.279000', 66.03, '21,22,23,24,25,26,27', '2024-12-05 09:02:58.362229', '2024-12-05 10:12:28.189675'),
+(36, 6, 23, 'Enterprise', 148.8, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 09:52:31.749000', '2025-01-05 09:52:31.752000', 148.8, '21,22,23,24,25,26,27', '2024-12-05 09:52:31.787483', '2024-12-05 10:11:18.556097'),
+(37, 6, 14, 'Basic', 97.65, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 09:56:28.853000', '2025-01-05 09:56:28.853000', 97.65, '21,22,23,24,25,26,27', '2024-12-05 09:56:28.868577', '2024-12-05 10:10:02.279694'),
+(38, 6, 42, 'Basic', 58.59, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 14:00:55.441000', '2025-01-05 14:00:55.443000', 58.59, '21,22,23,24,25,26,27', '2024-12-05 14:00:55.470625', '2024-12-05 18:38:54.489153'),
+(39, 6, 10, 'Pro', 86.49, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 16:54:54.820000', '2025-01-05 16:54:54.842000', 86.49, '21,22,23,24,25,26,27', '2024-12-05 16:54:54.974371', '2024-12-05 18:38:51.701101'),
+(40, 6, 10, 'Pro', 86.49, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 16:54:55.649000', '2025-01-05 16:54:55.649000', 86.49, '21,22,23,24,25,26,27', '2024-12-05 16:54:55.664829', '2024-12-05 18:38:48.549633'),
+(41, 6, 11, 'Basic', 72.633, 'Credit Card', 'first_payment', 'canceled', 'monthly', '2024-12-05 16:55:14.342000', '2025-01-05 16:55:14.342000', 72.633, '21,22,23,24,25,26,27', '2024-12-05 16:55:14.357502', '2024-12-05 18:38:44.609078'),
+(42, 6, 10, 'Pro', 95.139, 'Credit Card', 'first_payment', 'active', 'monthly', '2024-12-06 16:26:01.036000', '2025-01-06 16:26:01.037000', 95.139, '21,22,23,24,25,26,27,28', '2024-12-06 16:26:01.374328', '2024-12-06 16:26:01.374328');
 
 --
 -- Indexes for dumped tables
@@ -799,13 +824,13 @@ ALTER TABLE `subscriptions`
 -- AUTO_INCREMENT for table `customizationrequest`
 --
 ALTER TABLE `customizationrequest`
-  MODIFY `rid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `rid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `features`
 --
 ALTER TABLE `features`
-  MODIFY `feid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `feid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `housedeviceimages`
@@ -823,7 +848,7 @@ ALTER TABLE `houseimages`
 -- AUTO_INCREMENT for table `houseoffers`
 --
 ALTER TABLE `houseoffers`
-  MODIFY `oid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `oid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `houseorders`
@@ -841,25 +866,25 @@ ALTER TABLE `houseproductcompatibility`
 -- AUTO_INCREMENT for table `houseproductcustomelements`
 --
 ALTER TABLE `houseproductcustomelements`
-  MODIFY `cpid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `cpid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `houseproductfeature`
 --
 ALTER TABLE `houseproductfeature`
-  MODIFY `fid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=269;
+  MODIFY `fid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
 
 --
 -- AUTO_INCREMENT for table `houseproducts`
 --
 ALTER TABLE `houseproducts`
-  MODIFY `poid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `poid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `houseproducttechnical`
 --
 ALTER TABLE `houseproducttechnical`
-  MODIFY `tid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
+  MODIFY `tid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
 
 --
 -- AUTO_INCREMENT for table `houseuser`
@@ -883,7 +908,7 @@ ALTER TABLE `otp_verification`
 -- AUTO_INCREMENT for table `plans`
 --
 ALTER TABLE `plans`
-  MODIFY `pid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `pid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `price`
@@ -895,7 +920,7 @@ ALTER TABLE `price`
 -- AUTO_INCREMENT for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
-  MODIFY `suid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `suid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
